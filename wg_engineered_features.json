@@ -1,0 +1,29 @@
+{
+  "all_new": [
+    "wg_tested_twice",
+    "wg_tested_three_times",
+    "wg_single_test_only",
+    "aba_tested_flag",
+    "both_initial_tests_done",
+    "wg_test_count",
+    "xdamage_x_xmaturity",
+    "seed_dual_defect",
+    "ffa_moisture_stress",
+    "joint_weathering_stress",
+    "season_zone_interaction",
+    "high_moisture_flag",
+    "early_harvest_flag",
+    "wg_noise_risk_score"
+  ],
+  "recommended": [
+    "xdamage_x_xmaturity",
+    "season_zone_interaction",
+    "ffa_moisture_stress",
+    "joint_weathering_stress",
+    "early_harvest_flag",
+    "wg_noise_risk_score",
+    "seed_dual_defect",
+    "wg_single_test_only",
+    "wg_test_count"
+  ]
+}

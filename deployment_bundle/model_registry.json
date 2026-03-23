@@ -1,0 +1,15 @@
+{
+  "wg_model_name": "XGBoost_WG",
+  "ct_model_name": "GradientBoosting_CT",
+  "wg_model_file": "best_wg_model_XGBoost.joblib",
+  "ct_model_file": "best_ct_model_GradientBoosting.joblib",
+  "wg_test_r2": 0.9608,
+  "ct_test_r2": 0.999,
+  "wg_test_rmse": 1.606,
+  "ct_test_rmse": 0.782,
+  "feature_count": 50,
+  "wg_shap_kind": "tree_raw",
+  "ct_shap_kind": "tree_raw",
+  "shap_wg_file": "shap_values_wg.npy",
+  "shap_ct_file": "shap_values_ct.npy"
+}

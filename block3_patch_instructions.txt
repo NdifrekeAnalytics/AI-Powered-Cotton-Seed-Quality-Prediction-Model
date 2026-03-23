@@ -1,0 +1,63 @@
+
+In Block 3 (03_missing_redundancy_multicollinearity_v2.py):
+
+CHANGE 1 — Add new features to FEATURE_POOL (section 3.1):
+────────────────────────────────────────────────────────────
+Add these lines at the end of the FEATURE_POOL list (before the
+closing bracket), after the "# Pipeline stage" section:
+
+    # WG lifecycle & testing indicators (Block 2E)
+    "wg_tested_twice", "wg_tested_three_times", "wg_single_test_only",
+    "aba_tested_flag", "both_initial_tests_done", "wg_test_count",
+    "wg_degradation", "wg_degraded_flag",
+    "wg_ct_initial_spread_raw", "wg_ct_spread_flag",
+    "aba_level_observed", "aba_level_elevated", "aba_level_high",
+    "wg_lifecycle_score", "wg_trajectory",
+    "moisture_wg_lag_interaction", "xdamage_x_xmaturity", "seed_dual_defect",
+    "ffa_moisture_stress", "joint_weathering_stress", "season_zone_interaction",
+    "high_moisture_flag", "early_harvest_flag", "long_wg_lag_flag",
+    "wg_noise_risk_score",
+
+CHANGE 2 — Sentinel imputation for structural NaN features (section 3.3):
+───────────────────────────────────────────────────────────────────────────
+After the existing median imputation loop, add:
+
+    # Structural NaN features: use -1 sentinel (NOT median).
+    # -1 is distinguishable from real values (all real values are >=0)
+    # and tells tree models "this test was not performed".
+    SENTINEL_FEATS = [
+        "wg_degradation", "wg_ct_initial_spread_raw",
+        "aba_level_observed", "wg_lifecycle_score", "wg_trajectory",
+        "wg_degraded_flag", "aba_level_elevated", "aba_level_high",
+        "wg_ct_spread_flag", "moisture_wg_lag_interaction",
+        "ffa_moisture_stress",
+    ]
+    for c in SENTINEL_FEATS:
+        if c in df_model.columns:
+            df_model[c] = df_model[c].fillna(-1)
+
+CHANGE 3 — Force-include WG features in MI selection (section 3.8):
+────────────────────────────────────────────────────────────────────
+Replace the MI selection block with:
+
+    import json as _json
+    _wg_eng = os.path.join(PROJECT_DIR, "wg_engineered_features.json")
+    FORCE_INCLUDE = []
+    if os.path.exists(_wg_eng):
+        with open(_wg_eng) as _f:
+            _wg_data = _json.load(_f)
+        FORCE_INCLUDE = [c for c in _wg_data.get("recommended", [])
+                          if c in feat_cols]
+
+    MAX_FEATURES = 45
+    if len(feat_cols) > MAX_FEATURES:
+        # Reserve slots for forced features, select remainder by MI
+        n_free = MAX_FEATURES - len(FORCE_INCLUDE)
+        free_cols = [c for c in feat_cols if c not in FORCE_INCLUDE]
+        X_mi = df_model[free_cols].fillna(-1).values
+        y_mi = df_model["WG"].values
+        mi = mutual_info_regression(X_mi, y_mi, random_state=42)
+        mi_s = pd.Series(mi, index=free_cols).sort_values(ascending=False)
+        feat_cols = FORCE_INCLUDE + mi_s.head(n_free).index.tolist()
+        print(f"  Force-included: {FORCE_INCLUDE}")
+        print(f"  MI-selected   : {mi_s.head(n_free).index.tolist()}")
