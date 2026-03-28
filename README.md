@@ -2,6 +2,10 @@
 
 > A next-generation AI-powered platform for predicting, interpreting, and optimizing cotton seed quality across the global agricultural value chain.
 
+<div align="center">
+<img src="Cotton Plantation.jpg" alt="Cotton Field" width="100%" style="border-radius: 12px; max-height: 320px; object-fit: cover;" />
+A next-generation precision intelligence platform that autonomously predicts cotton seed germination quality, classifies vigor class, and delivers agronomic insights — from raw field data, in seconds.
+</div>
 ---
 
 ## 📸 Application Preview
